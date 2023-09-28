@@ -47,3 +47,11 @@ tasks.named('test') {
 jar {
     enabled = false
 }
+
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+    from './security'
+    include '*.yml'
+    into 'src/main/resources'
+}
