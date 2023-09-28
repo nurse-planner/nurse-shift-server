@@ -4,3 +4,11 @@
 # 사용 스택
 - Spring Boot 2.7.16
 - Java 11
+
+### Cloud 
+- EC2
+- S3
+
+### 데이터베이스
+- MySQL 8.0.33
+- RDS
