@@ -1,0 +1,3 @@
+[submodule "security"]
+	path = security
+	url = git@github.com:nurse-planner/security.git
