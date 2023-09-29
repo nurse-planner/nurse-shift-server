@@ -35,4 +35,10 @@ public class NurseController {
         List<NurseDto.Response> responses = nurseMapper.entitiesToResponses(nurses);
         return ResponseEntity.ok(responses);
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteNurse(@RequestBody NurseDto.Delete delete) {
+        nurseService.deleteNurse(delete.getId());
+        return ResponseEntity.noContent().build();
+    }
 }
