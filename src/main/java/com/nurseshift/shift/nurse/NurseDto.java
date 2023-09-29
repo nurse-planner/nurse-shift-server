@@ -2,6 +2,7 @@ package com.nurseshift.shift.nurse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class NurseDto {
 
@@ -17,6 +18,7 @@ public class NurseDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Delete {
         private String id;
     }
