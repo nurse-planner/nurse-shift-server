@@ -34,4 +34,14 @@ public class NurseService {
         return nurseRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NURSE_NOT_FOUND));
     }
+
+    @Transactional
+    public void deleteNurse(String id) {
+        boolean isExist = nurseRepository.existsById(id);
+        if (!isExist) {
+            throw new CustomException(ExceptionCode.NURSE_NOT_FOUND);
+        }
+
+        nurseRepository.deleteById(id);
+    }
 }
