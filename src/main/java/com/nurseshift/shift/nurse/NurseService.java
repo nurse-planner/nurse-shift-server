@@ -1,5 +1,7 @@
 package com.nurseshift.shift.nurse;
 
+import com.nurseshift.shift.common.exception.CustomException;
+import com.nurseshift.shift.common.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,12 @@ public class NurseService {
     private final NurseRepository nurseRepository;
 
     public Nurse createNurse(Nurse nurse) {
-        return nurseRepository.save(nurse);
+        boolean isExist = nurseRepository.existsById(nurse.getId());
+        if (!isExist) {
+            return nurseRepository.save(nurse);
+        }
+
+        throw new CustomException(ExceptionCode.ID_DUPLICATE);
     }
 
     public List<Nurse> getNurses() {
