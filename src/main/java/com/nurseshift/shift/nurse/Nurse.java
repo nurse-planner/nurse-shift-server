@@ -22,6 +22,7 @@ public class Nurse {
     @Column(name = "role", nullable = false)
     private Integer role;
     private Integer dutyKeep;
+    private String preceptorId;
 
     public Nurse(NurseDto.Post post) {
         this.id = post.getId();
@@ -29,5 +30,6 @@ public class Nurse {
         this.isPregnant = post.getIsPregnant();
         this.role = post.getRole();
         this.dutyKeep = post.getDutyKeep();
+        this.preceptorId = post.getPreceptorId();
     }
 }
