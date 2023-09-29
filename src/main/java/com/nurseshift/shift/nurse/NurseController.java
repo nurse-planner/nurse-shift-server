@@ -22,17 +22,22 @@ public class NurseController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("{nurse-id}")
-    public ResponseEntity<NurseDto.Response> getNurse(@PathVariable("nurse-id") String id) {
-        Nurse nurse = nurseService.getNurse(id);
-        NurseDto.Response response = nurseMapper.entityToResponse(nurse);
-        return ResponseEntity.ok(response);
+    @GetMapping
+    public ResponseEntity<?> getNurses(@RequestParam(value = "id", required = false) String id) {
+        if (id == null) {
+            List<Nurse> nurses = nurseService.getNurses();
+            List<NurseDto.Response> responses = nurseMapper.entitiesToResponses(nurses);
+            return ResponseEntity.ok(responses);
+        } else {
+            Nurse nurse = nurseService.getNurse(id);
+            NurseDto.Response response = nurseMapper.entityToResponse(nurse);
+            return ResponseEntity.ok(response);
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<NurseDto.Response>> getNurses() {
-        List<Nurse> nurses = nurseService.getNurses();
-        List<NurseDto.Response> responses = nurseMapper.entitiesToResponses(nurses);
-        return ResponseEntity.ok(responses);
+    @DeleteMapping
+    public ResponseEntity<?> deleteNurse(@RequestBody NurseDto.Delete delete) {
+        nurseService.deleteNurse(delete.getId());
+        return ResponseEntity.noContent().build();
     }
 }
