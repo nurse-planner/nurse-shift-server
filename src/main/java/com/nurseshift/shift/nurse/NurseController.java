@@ -22,6 +22,14 @@ public class NurseController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping
+    public ResponseEntity<NurseDto.Response> updateNurse( @RequestBody NurseDto.Patch patch) {
+        Nurse nurse = nurseMapper.patchToEntity(patch);
+        Nurse updatedNurse = nurseService.updateNurse(nurse);
+        NurseDto.Response response = nurseMapper.entityToResponse(updatedNurse);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("{nurse-id}")
     public ResponseEntity<NurseDto.Response> getNurse(@PathVariable("nurse-id") String id) {
         Nurse nurse = nurseService.getNurse(id);

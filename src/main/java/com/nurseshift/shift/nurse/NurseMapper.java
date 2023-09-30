@@ -12,6 +12,10 @@ public class NurseMapper {
         return new Nurse(post);
     }
 
+    public Nurse patchToEntity(NurseDto.Patch patch) {
+        return new Nurse(patch);
+    }
+
     public NurseDto.Response entityToResponse(Nurse nurse) {
         return new NurseDto.Response(nurse);
     }

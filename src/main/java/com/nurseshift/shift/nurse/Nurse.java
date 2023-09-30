@@ -2,6 +2,7 @@ package com.nurseshift.shift.nurse;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 public class Nurse {
 
     @Id
@@ -31,5 +33,14 @@ public class Nurse {
         this.role = post.getRole();
         this.dutyKeep = post.getDutyKeep();
         this.preceptorId = post.getPreceptorId();
+    }
+
+    public Nurse(NurseDto.Patch patch) {
+        this.id = patch.getId();
+        this.name = patch.getName();
+        this.isPregnant = patch.getIsPregnant();
+        this.role = patch.getRole();
+        this.dutyKeep = patch.getDutyKeep();
+        this.preceptorId = patch.getPreceptorId();
     }
 }

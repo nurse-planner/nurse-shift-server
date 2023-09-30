@@ -17,6 +17,17 @@ public class NurseDto {
         private String preceptorId;
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class Patch {
+        private String id;
+        private String name;
+        private Boolean isPregnant;
+        private Integer role;
+        private Integer dutyKeep;
+        private String preceptorId;
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
