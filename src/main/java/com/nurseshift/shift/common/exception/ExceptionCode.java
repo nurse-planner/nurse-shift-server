@@ -10,7 +10,8 @@ public enum ExceptionCode {
     NURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "Nurse Not Found"),
 
     /* 409 CONFLICT : 중복된 데이터가 존재 */
-    ID_DUPLICATE(HttpStatus.CONFLICT, "Id Is Duplicate");
+    ID_DUPLICATE(HttpStatus.CONFLICT, "Id Is Duplicate"),
+    MEMBER_EMAIL_EXIST(HttpStatus.CONFLICT, "Email Is Exist");
 
     private final HttpStatus status;
     private final String message;
