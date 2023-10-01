@@ -1,15 +1,16 @@
 package com.nurseshift.shift.nurse;
 
+import com.nurseshift.shift.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 public class Nurse {
 
     @Id
@@ -22,6 +23,10 @@ public class Nurse {
     @Column(name = "role", nullable = false)
     private Integer role;
     private Integer dutyKeep;
+    private String preceptorId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public Nurse(NurseDto.Post post) {
         this.id = post.getId();
@@ -29,5 +34,15 @@ public class Nurse {
         this.isPregnant = post.getIsPregnant();
         this.role = post.getRole();
         this.dutyKeep = post.getDutyKeep();
+        this.preceptorId = post.getPreceptorId();
+    }
+
+    public Nurse(NurseDto.Patch patch) {
+        this.id = patch.getId();
+        this.name = patch.getName();
+        this.isPregnant = patch.getIsPregnant();
+        this.role = patch.getRole();
+        this.dutyKeep = patch.getDutyKeep();
+        this.preceptorId = patch.getPreceptorId();
     }
 }

@@ -14,6 +14,18 @@ public class NurseDto {
         private Boolean isPregnant;
         private Integer role;
         private Integer dutyKeep;
+        private String preceptorId;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class Patch {
+        private String id;
+        private String name;
+        private Boolean isPregnant;
+        private Integer role;
+        private Integer dutyKeep;
+        private String preceptorId;
     }
 
     @Getter
@@ -30,6 +42,7 @@ public class NurseDto {
         private final Boolean isPregnant;
         private final Integer role;
         private final Integer dutyKeep;
+        private final String preceptorId;
 
         public Response(Nurse nurse) {
             this.id = nurse.getId();
@@ -37,6 +50,7 @@ public class NurseDto {
             this.isPregnant = nurse.getIsPregnant();
             this.role = nurse.getRole();
             this.dutyKeep = nurse.getDutyKeep();
+            this.preceptorId = nurse.getPreceptorId();
         }
     }
 }
