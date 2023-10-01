@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NurseRepository extends JpaRepository<Nurse, String> {
+public interface NurseRepository extends JpaRepository<Nurse, Long> {
 
     List<Nurse> findAllByMember(Member member);
 }

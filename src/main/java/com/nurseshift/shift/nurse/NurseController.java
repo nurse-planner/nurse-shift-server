@@ -36,7 +36,7 @@ public class NurseController {
 
     @GetMapping("{nurse-id}")
     public ResponseEntity<NurseDto.Response> getNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                                      @PathVariable("nurse-id") String id) {
+                                                      @PathVariable("nurse-id") Long id) {
         Nurse nurse = nurseService.getNurse(id , memberPrincipal.getMember());
         NurseDto.Response response = nurseMapper.entityToResponse(nurse);
         return ResponseEntity.ok(response);

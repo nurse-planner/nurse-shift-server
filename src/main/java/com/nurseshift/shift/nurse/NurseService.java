@@ -22,20 +22,12 @@ public class NurseService {
     public Nurse createNurse(Nurse nurse, Member member) {
         Member findMember = memberService.findVerifyMember(member.getId());
         nurse.setMember(findMember);
-        boolean isExist = nurseRepository.existsById(nurse.getId());
-        if (!isExist) {
-            return nurseRepository.save(nurse);
-        }
-
-        throw new CustomException(ExceptionCode.ID_DUPLICATE);
+        return nurseRepository.save(nurse);
     }
 
     @Transactional
     public Nurse updateNurse(Nurse nurse, Member member) {
         Nurse findNurse = verfiyNurse(nurse.getId());
-        System.out.println(findNurse.getMember().getEmail());
-        System.out.println(member.getEmail());
-
         memberService.checkEqualMember(findNurse.getMember(), member);
 
         Optional.ofNullable(nurse.getRole())
@@ -59,21 +51,21 @@ public class NurseService {
     }
 
     @Transactional(readOnly = true)
-    public Nurse getNurse(String id, Member member) {
+    public Nurse getNurse(Long id, Member member) {
         memberService.findVerifyMember(member.getId());
         return verfiyNurse(id);
     }
 
     @Transactional
-    public void deleteNurse(String id, Member member) {
+    public void deleteNurse(Long id, Member member) {
         memberService.findVerifyMember(member.getId());
         Nurse findNurse = verfiyNurse(id);
         memberService.checkEqualMember(findNurse.getMember(), member);
         nurseRepository.deleteById(id);
     }
 
-    private Nurse verfiyNurse(String nurse) {
-        return nurseRepository.findById(nurse)
+    private Nurse verfiyNurse(Long id) {
+        return nurseRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NURSE_NOT_FOUND));
     }
 }
