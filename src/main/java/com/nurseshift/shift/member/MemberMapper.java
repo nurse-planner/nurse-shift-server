@@ -10,4 +10,8 @@ public class MemberMapper {
     public Member requestToEntity(MemberDto.Post post) {
         return new Member(post.getEmail(), post.getPassword());
     }
+
+    public MemberDto.Response entityToResponse(Member member){
+        return new MemberDto.Response(member);
+    }
 }

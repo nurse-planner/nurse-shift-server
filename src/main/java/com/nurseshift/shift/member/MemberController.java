@@ -1,11 +1,10 @@
 package com.nurseshift.shift.member;
 
+import com.nurseshift.shift.member.authentication.MemberPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +18,12 @@ public class MemberController {
     public ResponseEntity<?> postMember(@RequestBody MemberDto.Post post) {
         memberService.createMember(memberMapper.requestToEntity(post));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> postMember(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        Member verifyMember = memberService.findVerifyMember(memberPrincipal.getMember().getId());
+        MemberDto.Response response = memberMapper.entityToResponse(verifyMember);
+        return ResponseEntity.ok(response);
     }
 }
