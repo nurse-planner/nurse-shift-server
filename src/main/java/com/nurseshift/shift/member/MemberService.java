@@ -25,10 +25,21 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-
     public void verifyExistEmail(String email) {
         if (memberRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionCode.MEMBER_EMAIL_EXIST);
+        }
+    }
+
+    public Member findVerifyMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.ID_DUPLICATE));
+    }
+
+
+    public void checkEqualMember(Member member, Member principal) {
+        if (!member.getEmail().equals(principal.getEmail())) {
+            throw new CustomException(ExceptionCode.MEMBER_BAD_REQUEST);
         }
     }
 }

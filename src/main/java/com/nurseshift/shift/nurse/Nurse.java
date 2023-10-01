@@ -1,12 +1,11 @@
 package com.nurseshift.shift.nurse;
 
+import com.nurseshift.shift.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -25,6 +24,9 @@ public class Nurse {
     private Integer role;
     private Integer dutyKeep;
     private String preceptorId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public Nurse(NurseDto.Post post) {
         this.id = post.getId();
