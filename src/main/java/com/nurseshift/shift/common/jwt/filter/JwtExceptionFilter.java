@@ -33,7 +33,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(errorResponse);
-        response.getWriter().println(objectMapper);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(errorResponse);
+        response.getWriter().println(json);
     }
 }
