@@ -1,5 +1,6 @@
 package com.nurseshift.shift.member;
 
+import com.nurseshift.shift.nurse.Nurse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,8 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     @BatchSize(size = 10)
     private List<String> roles = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Nurse> nurses;
 
     public Member(String email, String password) {
         this.email = email;
