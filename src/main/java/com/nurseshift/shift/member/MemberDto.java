@@ -12,4 +12,14 @@ public class MemberDto {
         private String email;
         private String password;
     }
+
+    @Getter
+    public static class Response {
+
+        private final String email;
+
+        public Response(Member member) {
+            this.email = member.getEmail();
+        }
+    }
 }

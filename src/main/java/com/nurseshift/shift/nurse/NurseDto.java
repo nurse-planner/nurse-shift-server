@@ -9,7 +9,6 @@ public class NurseDto {
     @AllArgsConstructor
     @Getter
     public static class Post {
-        private String id;
         private String name;
         private Boolean isPregnant;
         private Integer role;
@@ -20,7 +19,7 @@ public class NurseDto {
     @AllArgsConstructor
     @Getter
     public static class Patch {
-        private String id;
+        private Long id;
         private String name;
         private Boolean isPregnant;
         private Integer role;
@@ -32,12 +31,12 @@ public class NurseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Delete {
-        private String id;
+        private Long id;
     }
 
     @Getter
     public static class Response {
-        private final String id;
+        private final Long id;
         private final String name;
         private final Boolean isPregnant;
         private final Integer role;
