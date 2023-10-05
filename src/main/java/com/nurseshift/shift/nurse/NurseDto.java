@@ -17,8 +17,8 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
-        private List<LocalDate> off;
-        private List<LocalDate> rest;
+        private List<LocalDate> offs;
+        private List<LocalDate> rests;
     }
 
     @AllArgsConstructor
@@ -30,8 +30,8 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
-        private List<LocalDate> off;
-        private List<LocalDate> rest;
+        private List<LocalDate> offs;
+        private List<LocalDate> rests;
     }
 
     @Getter
