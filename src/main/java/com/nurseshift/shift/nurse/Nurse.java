@@ -1,11 +1,13 @@
 package com.nurseshift.shift.nurse;
 
 import com.nurseshift.shift.member.Member;
+import com.nurseshift.shift.schedule.Schedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -24,9 +26,11 @@ public class Nurse {
     private Integer role;
     private Integer dutyKeep;
     private String preceptorId;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+    @OneToMany(mappedBy = "nurse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Schedule> schedules;
 
     public Nurse(NurseDto.Post post) {
         this.name = post.getName();

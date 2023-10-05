@@ -1,7 +1,9 @@
 package com.nurseshift.shift.common.jwt.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nurseshift.shift.common.jwt.JwtTokenProvider;
 import com.nurseshift.shift.member.Member;
+import com.nurseshift.shift.member.MemberDto;
 import com.nurseshift.shift.member.authentication.MemberPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,5 +30,9 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
 
         String accessToken = jwtTokenProvider.generateAccessToken(member.getEmail(), member.getRoles());
         jwtTokenProvider.sendAccessToken(response, accessToken);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rsp = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new MemberDto.JwtResponse("Bearer " + accessToken, member));
+        response.getWriter().println(rsp);
     }
 }
