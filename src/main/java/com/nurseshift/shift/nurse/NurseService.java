@@ -21,7 +21,7 @@ public class NurseService {
     @Transactional
     public Nurse createNurse(Nurse nurse, Member member) {
         Member findMember = memberService.findVerifyMember(member.getId());
-        nurse.setMember(findMember);
+        findMember.addNurse(nurse);
         return nurseRepository.save(nurse);
     }
 

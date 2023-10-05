@@ -2,11 +2,10 @@ package com.nurseshift.shift.nurse;
 
 import com.nurseshift.shift.member.Member;
 import com.nurseshift.shift.schedule.Schedule;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +16,7 @@ public class Nurse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "nurse_id")
     private Long id;
     @Column(name = "name", length = 20, nullable = false)
     private String name;
@@ -30,7 +30,7 @@ public class Nurse {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Schedule> schedules;
+    private List<Schedule> schedules = new ArrayList<>();
 
     public Nurse(NurseDto.Post post) {
         this.name = post.getName();
@@ -47,5 +47,19 @@ public class Nurse {
         this.role = patch.getRole();
         this.dutyKeep = patch.getDutyKeep();
         this.preceptorId = patch.getPreceptorId();
+    }
+
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+        if (schedule.getNurse() != this) {
+            schedule.setNurse(this);
+        }
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getNurses().contains(this)) {
+            member.getNurses().add(this);
+        }
     }
 }

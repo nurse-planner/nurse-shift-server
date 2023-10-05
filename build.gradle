@@ -46,6 +46,9 @@ dependencies {
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // jython
+    implementation group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 }
 
 tasks.named('test') {
