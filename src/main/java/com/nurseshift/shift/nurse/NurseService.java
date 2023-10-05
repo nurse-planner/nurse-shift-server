@@ -4,6 +4,7 @@ import com.nurseshift.shift.common.exception.CustomException;
 import com.nurseshift.shift.common.exception.ExceptionCode;
 import com.nurseshift.shift.member.Member;
 import com.nurseshift.shift.member.MemberService;
+import com.nurseshift.shift.nurse.off.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,19 +18,25 @@ public class NurseService {
 
     private final NurseRepository nurseRepository;
     private final MemberService memberService;
+    private final OffService offService;
 
     @Transactional
-    public Nurse createNurse(Nurse nurse, Member member) {
+    public Nurse createNurse(Nurse nurse, Member member, List<Off> offs, List<Off> rests) {
         Member findMember = memberService.findVerifyMember(member.getId());
         findMember.addNurse(nurse);
-        return nurseRepository.save(nurse);
+        Nurse saved = nurseRepository.save(nurse);
+        offs.addAll(rests);
+        offService.createOff(offs, saved);
+        return saved;
     }
 
     @Transactional
-    public Nurse updateNurse(Nurse nurse, Member member) {
+    public Nurse updateNurse(Nurse nurse, Member member, List<Off> offs, List<Off> rests) {
         Nurse findNurse = verfiyNurse(nurse.getId());
         memberService.checkEqualMember(findNurse.getMember(), member);
-
+        offService.deleteOff(findNurse);
+        offs.addAll(rests);
+        offService.createOff(offs, nurse);
         Optional.ofNullable(nurse.getRole())
                 .ifPresent(findNurse::setRole);
         Optional.ofNullable(nurse.getName())

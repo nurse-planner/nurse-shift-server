@@ -1,6 +1,7 @@
 package com.nurseshift.shift.nurse;
 
 import com.nurseshift.shift.member.Member;
+import com.nurseshift.shift.nurse.off.Off;
 import com.nurseshift.shift.schedule.Schedule;
 import lombok.*;
 
@@ -26,6 +27,8 @@ public class Nurse {
     private Integer role;
     private Integer dutyKeep;
     private String preceptorId;
+    @OneToMany(mappedBy = "nurse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Off> offs= new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -53,6 +56,12 @@ public class Nurse {
         this.schedules.add(schedule);
         if (schedule.getNurse() != this) {
             schedule.setNurse(this);
+        }
+    }
+    public void addOff(Off off) {
+        this.offs.add(off);
+        if (off.getNurse() != this) {
+            off.setNurse(this);
         }
     }
 

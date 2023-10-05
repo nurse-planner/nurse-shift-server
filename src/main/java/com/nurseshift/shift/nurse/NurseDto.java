@@ -1,8 +1,11 @@
 package com.nurseshift.shift.nurse;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.nurseshift.shift.nurse.off.Off;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NurseDto {
 
@@ -14,6 +17,8 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
+        private List<LocalDate> offs;
+        private List<LocalDate> rests;
     }
 
     @AllArgsConstructor
@@ -25,6 +30,8 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
+        private List<LocalDate> offs;
+        private List<LocalDate> rests;
     }
 
     @Getter
@@ -42,6 +49,8 @@ public class NurseDto {
         private final Integer role;
         private final Integer dutyKeep;
         private final String preceptorId;
+        private final List<LocalDate> offs;
+        private final List<LocalDate> rests;
 
         public Response(Nurse nurse) {
             this.id = nurse.getId();
@@ -50,6 +59,8 @@ public class NurseDto {
             this.role = nurse.getRole();
             this.dutyKeep = nurse.getDutyKeep();
             this.preceptorId = nurse.getPreceptorId();
+            this.offs = nurse.getOffs().stream().filter(Off::getType).map(Off::getDate).collect(Collectors.toList());
+            this.rests = nurse.getOffs().stream().filter(off -> !off.getType()).map(Off::getDate).collect(Collectors.toList());
         }
     }
 }
