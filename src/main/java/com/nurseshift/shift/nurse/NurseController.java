@@ -23,8 +23,8 @@ public class NurseController {
     public ResponseEntity<NurseDto.Response> createNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                                          @RequestBody NurseDto.Post post) {
         Nurse nurse = nurseMapper.postToEntity(post);
-        List<Off> offs = offMapper.requestToEntity(post.getOff(), true);
-        List<Off> rests = offMapper.requestToEntity(post.getRest(), false);
+        List<Off> offs = offMapper.requestToEntity(post.getOffs(), true);
+        List<Off> rests = offMapper.requestToEntity(post.getRests(), false);
         Nurse createdNurse = nurseService.createNurse(nurse, memberPrincipal.getMember(), offs, rests);
         NurseDto.Response response = nurseMapper.entityToResponse(createdNurse);
         return ResponseEntity.ok(response);
@@ -34,8 +34,8 @@ public class NurseController {
     public ResponseEntity<NurseDto.Response> updateNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                                          @RequestBody NurseDto.Patch patch) {
         Nurse nurse = nurseMapper.patchToEntity(patch);
-        List<Off> offs = offMapper.requestToEntity(patch.getOff(), true);
-        List<Off> rests = offMapper.requestToEntity(patch.getRest(), false);
+        List<Off> offs = offMapper.requestToEntity(patch.getOffs(), true);
+        List<Off> rests = offMapper.requestToEntity(patch.getRests(), false);
         Nurse updatedNurse = nurseService.updateNurse(nurse, memberPrincipal.getMember(), offs, rests);
         NurseDto.Response response = nurseMapper.entityToResponse(updatedNurse);
         return ResponseEntity.ok(response);
