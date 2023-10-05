@@ -25,7 +25,7 @@ public class NurseController {
         Nurse nurse = nurseMapper.postToEntity(post);
         List<Off> offs = offMapper.requestToEntity(post.getOff(), true);
         List<Off> rests = offMapper.requestToEntity(post.getRest(), false);
-        Nurse createdNurse = nurseService.createNurse(nurse, memberPrincipal.getMember(), post, offs, rests);
+        Nurse createdNurse = nurseService.createNurse(nurse, memberPrincipal.getMember(), offs, rests);
         NurseDto.Response response = nurseMapper.entityToResponse(createdNurse);
         return ResponseEntity.ok(response);
     }
