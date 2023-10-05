@@ -1,6 +1,8 @@
 package com.nurseshift.shift.nurse;
 
 import com.nurseshift.shift.member.authentication.MemberPrincipal;
+import com.nurseshift.shift.nurse.off.Off;
+import com.nurseshift.shift.nurse.off.OffMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,12 +17,15 @@ public class NurseController {
 
     private final NurseService nurseService;
     private final NurseMapper nurseMapper;
+    private final OffMapper offMapper;
 
     @PostMapping
     public ResponseEntity<NurseDto.Response> createNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                                          @RequestBody NurseDto.Post post) {
         Nurse nurse = nurseMapper.postToEntity(post);
-        Nurse createdNurse = nurseService.createNurse(nurse, memberPrincipal.getMember());
+        List<Off> offs = offMapper.requestToEntity(post.getOff(), true);
+        List<Off> rests = offMapper.requestToEntity(post.getRest(), false);
+        Nurse createdNurse = nurseService.createNurse(nurse, memberPrincipal.getMember(), post, offs, rests);
         NurseDto.Response response = nurseMapper.entityToResponse(createdNurse);
         return ResponseEntity.ok(response);
     }
@@ -29,7 +34,9 @@ public class NurseController {
     public ResponseEntity<NurseDto.Response> updateNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                                          @RequestBody NurseDto.Patch patch) {
         Nurse nurse = nurseMapper.patchToEntity(patch);
-        Nurse updatedNurse = nurseService.updateNurse(nurse, memberPrincipal.getMember());
+        List<Off> offs = offMapper.requestToEntity(patch.getOff(), true);
+        List<Off> rests = offMapper.requestToEntity(patch.getRest(), false);
+        Nurse updatedNurse = nurseService.updateNurse(nurse, memberPrincipal.getMember(), offs, rests);
         NurseDto.Response response = nurseMapper.entityToResponse(updatedNurse);
         return ResponseEntity.ok(response);
     }
@@ -37,14 +44,14 @@ public class NurseController {
     @GetMapping("{nurse-id}")
     public ResponseEntity<NurseDto.Response> getNurse(@AuthenticationPrincipal MemberPrincipal memberPrincipal,
                                                       @PathVariable("nurse-id") Long id) {
-        Nurse nurse = nurseService.getNurse(id , memberPrincipal.getMember());
+        Nurse nurse = nurseService.getNurse(id, memberPrincipal.getMember());
         NurseDto.Response response = nurseMapper.entityToResponse(nurse);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<NurseDto.Response>> getNurses(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-        List<Nurse> nurses = nurseService.getNurses( memberPrincipal.getMember());
+        List<Nurse> nurses = nurseService.getNurses(memberPrincipal.getMember());
         List<NurseDto.Response> responses = nurseMapper.entitiesToResponses(nurses);
         return ResponseEntity.ok(responses);
     }
