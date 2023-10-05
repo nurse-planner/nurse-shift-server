@@ -10,13 +10,16 @@ import java.util.stream.Collectors;
 
 public class ScheduleDto {
 
+    @Getter
     public static class BaseResponse{
         private final LocalDate startDate;
         private final LocalDate endDate;
+        private final Long nurseCount;
 
-        public BaseResponse(LocalDate startDate, LocalDate endDate) {
+        public BaseResponse(LocalDate startDate, LocalDate endDate, Long nurseCount) {
             this.startDate = startDate;
             this.endDate = endDate;
+            this.nurseCount = nurseCount;
         }
     }
 

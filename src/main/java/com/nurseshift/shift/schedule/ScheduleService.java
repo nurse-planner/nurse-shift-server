@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +37,23 @@ public class ScheduleService {
         return schedules;
     }
 
-    public List<Integer> getMonths(MemberPrincipal memberPrincipal){
-        return scheduleRepository.findDistinctMonths();
+    public List<ScheduleDto.BaseResponse> getMonths(MemberPrincipal memberPrincipal) {
+        List<Object[]> yearMonths = scheduleRepository.findDistinctYearMonths();
+        List<ScheduleDto.BaseResponse> baseResponses = yearMonths.stream()
+                .map(yearMonth -> {
+                    int year = (int) yearMonth[0];
+                    int month = (int) yearMonth[1];
+
+                    YearMonth ym = YearMonth.of(year, month);
+                    int lastDayOfMonth = ym.lengthOfMonth();
+
+                    LocalDate startDate = LocalDate.of(year, month, 1);
+                    LocalDate endDate = LocalDate.of(year, month, lastDayOfMonth);
+                    Long count = scheduleRepository.countDistinctNursesByYearAndMonth(year, month, memberPrincipal.getMember().getId());
+                    return new ScheduleDto.BaseResponse(startDate, endDate, count);
+                })
+                .collect(Collectors.toList());
+        return baseResponses;
     }
 
     @Transactional
