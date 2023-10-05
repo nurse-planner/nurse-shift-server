@@ -22,7 +22,7 @@ public class ScheduleService {
 
     public List<Schedule> getSchedules(MemberPrincipal memberPrincipal, LocalDate startDate) {
         Member member = memberService.findVerifyMember(memberPrincipal.getMember().getId());
-        List<Schedule> schedules = scheduleRepository.findAllByMemberAndIdxAndDate(member, startDate);
+        List<Schedule> schedules = scheduleRepository.findAllByMemberAndDate(member, startDate);
         return schedules;
     }
 
