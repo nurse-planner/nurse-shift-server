@@ -17,6 +17,7 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
+        private Integer workingYear;
         private List<LocalDate> offs;
         private List<LocalDate> rests;
     }
@@ -30,6 +31,7 @@ public class NurseDto {
         private Integer role;
         private Integer dutyKeep;
         private String preceptorId;
+        private Integer workingYear;
         private List<LocalDate> offs;
         private List<LocalDate> rests;
     }
@@ -49,6 +51,7 @@ public class NurseDto {
         private final Integer role;
         private final Integer dutyKeep;
         private final String preceptorId;
+        private final Integer workingYear;
         private final List<LocalDate> offs;
         private final List<LocalDate> rests;
 
@@ -59,8 +62,24 @@ public class NurseDto {
             this.role = nurse.getRole();
             this.dutyKeep = nurse.getDutyKeep();
             this.preceptorId = nurse.getPreceptorId();
+            this.workingYear = nurse.getWorkingYear();
             this.offs = nurse.getOffs().stream().filter(Off::getType).map(Off::getDate).collect(Collectors.toList());
             this.rests = nurse.getOffs().stream().filter(off -> !off.getType()).map(Off::getDate).collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    public static class PretreatmentResponse {
+        private final Long id;
+        private final Integer dutyKeep;
+        private final List<LocalDate> off;
+        private final Integer workingYear;
+
+        public PretreatmentResponse(Nurse nurse) {
+            this.id = nurse.getId();
+            this.dutyKeep = nurse.getDutyKeep();
+            this.off = nurse.getOffs().stream().map(Off::getDate).collect(Collectors.toList());
+            this.workingYear = nurse.getWorkingYear();
         }
     }
 }
