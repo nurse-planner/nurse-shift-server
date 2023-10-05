@@ -19,16 +19,21 @@ public class ScheduleController {
     private final ScheduleMapper scheduleMapper;
 
     @PostMapping
-    public ResponseEntity<?> postSchedule(@AuthenticationPrincipal MemberPrincipal memberPrincipal, @RequestBody ScheduleDto.Post post) {
-        scheduleService.createSchedule(post, memberPrincipal);
+    public ResponseEntity<?> postSchedule(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+        scheduleService.createSchedule(memberPrincipal);
         return null;
     }
 
     @GetMapping
     public ResponseEntity<List<ScheduleDto.Response>> getSchedule(@AuthenticationPrincipal MemberPrincipal principal,
-                                                                  @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate startDate) {
-        List<Schedule> schedules = scheduleService.getSchedules(principal, startDate);
-        List<ScheduleDto.Response> responses = scheduleMapper.entitiesToResponses(schedules);
+                                                                  @RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate) {
+        List<ScheduleDto.Response> responses = scheduleService.getSchedules(principal, startDate);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Integer>> getSchedule(@AuthenticationPrincipal MemberPrincipal principal) {
+        List<Integer> months = scheduleService.getMonths(principal);
+        return ResponseEntity.ok(months);
     }
 }

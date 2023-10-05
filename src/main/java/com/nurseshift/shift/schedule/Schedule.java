@@ -17,11 +17,6 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Long id;
-    private Long idx;
-    @Column(name = "title", nullable = false)
-    private String title;
-    @Column(columnDefinition = "TEXT")
-    private String content;
     @Column(name = "date", nullable = false)
     private LocalDate date;
     @Column(name = "shift_type", nullable = false)
