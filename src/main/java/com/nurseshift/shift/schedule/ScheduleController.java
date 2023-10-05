@@ -1,11 +1,15 @@
 package com.nurseshift.shift.schedule;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import com.nurseshift.shift.member.authentication.MemberPrincipal;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,28 +27,38 @@ public class ScheduleController {
     public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, WebClient.Builder builder) {
         this.scheduleService = scheduleService;
         this.scheduleMapper = scheduleMapper;
-        this.webClient = builder.baseUrl("http://localhost:8080").build();
+        this.webClient = builder.baseUrl("http://localhost:8000").build();
     }
 
 //    @PostMapping
-//    public Mono<String> create(@RequestBody String data) {
+//    public Mono<String> create(@AuthenticationPrincipal MemberPrincipal principal, @RequestBody ScheduleDto.Post post ) {
 //        return webClient.post()
-//                .uri("/async-endpoint")
+//                .uri("/")
 //                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(data)
+//                .bodyValue(scheduleService.getRequestData(principal, post))
 //                .retrieve()
 //                .bodyToMono(String.class)
 //                .doOnSuccess(response -> {
-//                    // TODO: DB에 데이터 저장 로직 구현
-//                    System.out.println("DB에 데이터 저장: " + response);
+//                    response = response.replaceAll("\\\\", "");
+//                    System.out.println(response);
+//                    ObjectMapper objectMapper = new ObjectMapper();
+//                    objectMapper.configure(
+//                            DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,true);
+//                    try {
+//                        ScheduleDto.Result result = objectMapper.readValue(response, ScheduleDto.Result.class);
+//                        System.out.println(result);
+//                    } catch (JsonProcessingException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//
 //                });
 //    }
 
-    @PostMapping
-    public ResponseEntity<?> postSchedule(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-        scheduleService.createSchedule(memberPrincipal);
-        return null;
-    }
+//    @PostMapping
+//    public ResponseEntity<?> postSchedule(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
+//        scheduleService.createSchedule(memberPrincipal);
+//        return null;
+//    }
 
     @GetMapping
     public ResponseEntity<List<ScheduleDto.Response>> getSchedule(@AuthenticationPrincipal MemberPrincipal principal,

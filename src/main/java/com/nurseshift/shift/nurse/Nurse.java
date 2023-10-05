@@ -27,6 +27,8 @@ public class Nurse {
     private Integer role;
     private Integer dutyKeep;
     private String preceptorId;
+    @Column(name = "working_year", nullable = false)
+    private Integer workingYear;
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Off> offs= new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +43,7 @@ public class Nurse {
         this.role = post.getRole();
         this.dutyKeep = post.getDutyKeep();
         this.preceptorId = post.getPreceptorId();
+        this.workingYear = post.getWorkingYear();
     }
 
     public Nurse(NurseDto.Patch patch) {
@@ -50,6 +53,7 @@ public class Nurse {
         this.role = patch.getRole();
         this.dutyKeep = patch.getDutyKeep();
         this.preceptorId = patch.getPreceptorId();
+        this.workingYear = patch.getWorkingYear();
     }
 
     public void addSchedule(Schedule schedule) {

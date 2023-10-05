@@ -4,7 +4,8 @@ import com.nurseshift.shift.common.exception.CustomException;
 import com.nurseshift.shift.common.exception.ExceptionCode;
 import com.nurseshift.shift.member.Member;
 import com.nurseshift.shift.member.MemberService;
-import com.nurseshift.shift.nurse.off.*;
+import com.nurseshift.shift.nurse.off.Off;
+import com.nurseshift.shift.nurse.off.OffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,8 @@ public class NurseService {
         offService.deleteOff(findNurse);
         offs.addAll(rests);
         offService.createOff(offs, nurse);
+        Optional.ofNullable(nurse.getWorkingYear())
+                .ifPresent(findNurse::setWorkingYear);
         Optional.ofNullable(nurse.getRole())
                 .ifPresent(findNurse::setRole);
         Optional.ofNullable(nurse.getName())

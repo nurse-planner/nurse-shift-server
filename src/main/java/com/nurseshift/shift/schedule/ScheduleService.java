@@ -3,8 +3,7 @@ package com.nurseshift.shift.schedule;
 import com.nurseshift.shift.member.Member;
 import com.nurseshift.shift.member.MemberService;
 import com.nurseshift.shift.member.authentication.MemberPrincipal;
-import com.nurseshift.shift.nurse.Nurse;
-import com.nurseshift.shift.nurse.NurseService;
+import com.nurseshift.shift.nurse.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,5 +77,22 @@ public class ScheduleService {
             }
         }
         // TODO: 받아온 근무표로 Schedule 생성 및 간호사와 매핑하여 DB 저장하기
+    }
+
+    public ScheduleDto.PreResponse getRequestData(MemberPrincipal principal, ScheduleDto.Post post) {
+        Member verifyMember = memberService.findVerifyMember(principal.getMember().getId());
+
+        List<Nurse> nurses = nurseService.getNurses(verifyMember);
+        List<NurseDto.PretreatmentResponse> chargeNurses = nurses.stream().filter(nurse -> nurse.getRole() == 0 || nurse.getRole() == 1).map(NurseDto.PretreatmentResponse::new).collect(Collectors.toList());
+        List<NurseDto.PretreatmentResponse> actNurses = nurses.stream().filter(nurse -> nurse.getRole() == 2).map(NurseDto.PretreatmentResponse::new).collect(Collectors.toList());
+
+        LocalDate startDate = post.getStartDate();
+        YearMonth yearMonth = YearMonth.of(startDate.getYear(), startDate.getMonthValue());
+        int lastDayOfMonth = yearMonth.lengthOfMonth();
+        int startDay = startDate.getDayOfMonth();
+
+        ScheduleDto.PreResponse response = new ScheduleDto.PreResponse(post, lastDayOfMonth - startDay, chargeNurses, actNurses);
+        System.out.println(response);
+        return response;
     }
 }
