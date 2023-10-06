@@ -77,13 +77,12 @@ public class ScheduleDto {
         }
     }
 
-
     @AllArgsConstructor
     @Getter
+    @NoArgsConstructor
     @Setter
     public static class Result {
-        Integer id;
-        Map<String, String> day;
+        Long id;
+        Map<String,String> day;
     }
-
 }
