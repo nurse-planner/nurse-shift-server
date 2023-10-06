@@ -24,12 +24,18 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<ScheduleDto.Response> getSchedules(MemberPrincipal memberPrincipal, LocalDate startDate) {
         Member member = memberService.findVerifyMember(memberPrincipal.getMember().getId());
-        LocalDate end = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        int year = startDate.getYear();
+        int month = startDate.getMonthValue();
 
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        System.out.println("endOfMonth = " + endOfMonth);
         List<Nurse> nurses = nurseService.getNurses(member);
         List<ScheduleDto.Response> schedules = new ArrayList<>();
         for (Nurse nurse : nurses) {
-            List<Schedule> schedule = scheduleRepository.findAllByMemberAndNurseAndDateBetween(member, nurse, startDate, end);
+            List<Schedule> schedule = scheduleRepository.findAllByMemberAndNurseAndDateBetween(member, nurse, startDate, endOfMonth);
+            System.out.println("schedule = " + schedule.size());
             schedules.add(new ScheduleDto.Response(nurse, schedule));
         }
 
@@ -73,17 +79,21 @@ public class ScheduleService {
 
         for (ScheduleDto.Result rs : result) {
             Nurse nurse = nurseService.getNurse(rs.getId(), member);
-            Schedule schedule = new Schedule();
+            int size = rs.getDay().size();
+            System.out.println("size    = " + size);
             for (String date : rs.getDay().keySet()) {
+                Schedule schedule = new Schedule();
                 schedule.setShiftType(rs.getDay().get(date));
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate localDate = LocalDate.parse(date,formatter);
+                System.out.println(nurse.getId() + " nurseID " +  localDate + " " + date);
                 schedule.setDate(localDate);
                 nurse.addSchedule(schedule);
                 member.addSchedule(schedule);
                 scheduleRepository.save(schedule);
             }
         }
+        System.out.println("result.length = " + result.length);
     }
 
     public ScheduleDto.PreResponse getRequestData(MemberPrincipal principal, ScheduleDto.Post post) {

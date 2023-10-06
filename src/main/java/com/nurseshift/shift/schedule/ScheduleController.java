@@ -50,6 +50,7 @@ public class ScheduleController {
                     try {
                         ScheduleDto.Result[] result = objectMapper.readValue(response, ScheduleDto.Result[].class);
                         scheduleService.createSchedule(principal, result, post.getStartDate());
+                        System.out.println(response);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
