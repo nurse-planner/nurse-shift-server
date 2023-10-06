@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
+    List<Schedule> findAllByMemberAndDateBetween(Member member, LocalDate startDate, LocalDate endDate);
     List<Schedule> findAllByMemberAndNurseAndDateBetween(Member member, Nurse nurse, LocalDate start, LocalDate end);
     @Query("select function('year', s.date) as year, function('month', s.date) as month from Schedule s group by year, month")
     List<Object[]> findDistinctYearMonths();

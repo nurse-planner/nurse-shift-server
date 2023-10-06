@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,27 +56,34 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void createSchedule(MemberPrincipal memberPrincipal) {
+    public void createSchedule(MemberPrincipal memberPrincipal, ScheduleDto.Result[] result, LocalDate startDate) {
         Member member = memberService.findVerifyMember(memberPrincipal.getMember().getId());
-        // TODO: post로 들어오는 값들로 간호사 전처리 후 파이썬으로 근무표 생성하고 받아오기
-        List<Nurse> nurses = nurseService.getNurses(member);
-        Random random = new Random();
-        LocalDate now = LocalDate.now();
-        YearMonth yearMonth = YearMonth.of(now.getYear(), now.getMonthValue());
-        int lastDayOfMonth = yearMonth.lengthOfMonth();
-        int startDay = now.getDayOfMonth();
-        for (int day = 0; day <= lastDayOfMonth - startDay; day++) {
-            for (Nurse nurse : nurses) {
-                Schedule schedule = new Schedule();
-                schedule.setDate(LocalDate.now().plusDays(day));
-                int i = random.nextInt(3) + 1;
-                schedule.setShiftType(i == 3 ? "N" : i == 2 ? "E" : "D");
+
+        int year = startDate.getYear();
+        int month = startDate.getMonthValue();
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        List<Schedule> schedulesToDelete = scheduleRepository.findAllByMemberAndDateBetween(member, startOfMonth, endOfMonth);
+
+        if (!schedulesToDelete.isEmpty()){
+            scheduleRepository.deleteAll(schedulesToDelete);
+        }
+
+        for (ScheduleDto.Result rs : result) {
+            Nurse nurse = nurseService.getNurse(rs.getId(), member);
+            Schedule schedule = new Schedule();
+            for (String date : rs.getDay().keySet()) {
+                schedule.setShiftType(rs.getDay().get(date));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate localDate = LocalDate.parse(date,formatter);
+                schedule.setDate(localDate);
                 nurse.addSchedule(schedule);
                 member.addSchedule(schedule);
                 scheduleRepository.save(schedule);
             }
         }
-        // TODO: 받아온 근무표로 Schedule 생성 및 간호사와 매핑하여 DB 저장하기
     }
 
     public ScheduleDto.PreResponse getRequestData(MemberPrincipal principal, ScheduleDto.Post post) {

@@ -1,7 +1,8 @@
 package com.nurseshift.shift.schedule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nurseshift.shift.member.authentication.MemberPrincipal;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,32 +29,32 @@ public class ScheduleController {
     public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, WebClient.Builder builder) {
         this.scheduleService = scheduleService;
         this.scheduleMapper = scheduleMapper;
-        this.webClient = builder.baseUrl("http://localhost:8000").build();
+        this.webClient = builder.baseUrl("http://uzrylghpmb.us19.qoddiapp.com").build();
     }
 
-//    @PostMapping
-//    public Mono<String> create(@AuthenticationPrincipal MemberPrincipal principal, @RequestBody ScheduleDto.Post post ) {
-//        return webClient.post()
-//                .uri("/")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(scheduleService.getRequestData(principal, post))
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .doOnSuccess(response -> {
-//                    response = response.replaceAll("\\\\", "");
-//                    System.out.println(response);
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//                    objectMapper.configure(
-//                            DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,true);
-//                    try {
-//                        ScheduleDto.Result result = objectMapper.readValue(response, ScheduleDto.Result.class);
-//                        System.out.println(result);
-//                    } catch (JsonProcessingException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//
-//                });
-//    }
+    @PostMapping
+    public Mono<String> create(@AuthenticationPrincipal MemberPrincipal principal, @RequestBody ScheduleDto.Post post) {
+        return webClient.post()
+                .uri("/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(scheduleService.getRequestData(principal, post))
+                .retrieve()
+                .bodyToMono(String.class)
+                .publishOn(Schedulers.boundedElastic())
+                .doOnSuccess(response -> {
+                    response = response.replaceAll("\\\\", "");
+                    response = response.substring(1, response.length() - 1);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.configure(
+                            DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+                    try {
+                        ScheduleDto.Result[] result = objectMapper.readValue(response, ScheduleDto.Result[].class);
+                        scheduleService.createSchedule(principal, result, post.getStartDate());
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
 
 //    @PostMapping
 //    public ResponseEntity<?> postSchedule(@AuthenticationPrincipal MemberPrincipal memberPrincipal) {
